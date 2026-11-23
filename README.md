@@ -37,7 +37,7 @@ dependencyResolutionManagement {
 
 ```toml
 tangentSdk = "1.0.0"
-tangent-sdk = { group = "com.github.Tangent-Apps.TangentAndroidSDK", name = "tangent-sdk", version.ref = "tangentSdk" }
+tangent-sdk = { group = "com.github.Tangent-Apps", name = "TangentAndroidSDK", version.ref = "tangentSdk" }
 ```
 
 `app/build.gradle.kts`: `implementation(libs.tangent.sdk)`. Mixpanel, Adjust, Play Billing, Superwall and coroutines come with it (`api`), so the app can drop its own declarations of them.
@@ -47,7 +47,7 @@ tangent-sdk = { group = "com.github.Tangent-Apps.TangentAndroidSDK", name = "tan
 ```kotlin
 includeBuild("../TangentSDKS/TangentAndroidSDK") {
     dependencySubstitution {
-        substitute(module("com.github.Tangent-Apps.TangentAndroidSDK:tangent-sdk")).using(project(":tangent-sdk"))
+        substitute(module("com.github.Tangent-Apps:TangentAndroidSDK")).using(project(":tangent-sdk"))
     }
 }
 ```
