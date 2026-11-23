@@ -1,0 +1,29 @@
+[versions]
+# Kept in step with PulseAI / TeamMeals Android, so the apps resolve the same versions.
+agp = "9.5.1"
+coroutines = "1.11.0"
+lifecycle = "2.11.0"
+mixpanel = "8.12.0"
+adjust = "5.8.1"
+installReferrer = "2.2"
+adsIdentifier = "18.3.0"
+billing = "9.1.0"
+superwall = "2.10.2"
+# Superwall's own runtime dependency (its paywall drawer); compiled against to adjust that drawer.
+material = "1.12.0"
+junit = "4.13.2"
+
+[libraries]
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycle" }
+mixpanel-android = { group = "com.mixpanel.android", name = "mixpanel-android", version.ref = "mixpanel" }
+adjust-android = { group = "com.adjust.sdk", name = "adjust-android", version.ref = "adjust" }
+installreferrer = { group = "com.android.installreferrer", name = "installreferrer", version.ref = "installReferrer" }
+play-services-ads-identifier = { group = "com.google.android.gms", name = "play-services-ads-identifier", version.ref = "adsIdentifier" }
+billing-ktx = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "billing" }
+superwall-android = { group = "com.superwall.sdk", name = "superwall-android", version.ref = "superwall" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+
+[plugins]
+android-library = { id = "com.android.library", version.ref = "agp" }

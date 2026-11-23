@@ -1,0 +1,27 @@
+# Gradle
+.gradle/
+build/
+.kotlin/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Machine-specific (Android SDK path)
+local.properties
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+.navigation/
+
+# Secrets — never commit keys or signing files
+keys.properties
+*.keystore
+*.jks
+google-services.json
+
+# Claude Code
+.claude/settings.local.json
+
+# macOS
+.DS_Store

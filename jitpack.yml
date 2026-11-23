@@ -1,0 +1,5 @@
+# JitPack builds a version the first time an app asks for it (or from jitpack.io → Look up → Get it).
+jdk:
+  - openjdk21
+install:
+  - ./gradlew :tangent-sdk:publishReleasePublicationToMavenLocal
