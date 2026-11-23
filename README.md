@@ -36,7 +36,7 @@ dependencyResolutionManagement {
 `gradle/libs.versions.toml`:
 
 ```toml
-tangentSdk = "1.0.0"
+tangentSdk = "1.0.1"
 tangent-sdk = { group = "com.github.Tangent-Apps", name = "TangentAndroidSDK", version.ref = "tangentSdk" }
 ```
 
@@ -81,6 +81,16 @@ TangentSDK.initialize(
 ```
 
 Each service stays off when its key is `null` or blank.
+
+### Decide these per app
+
+The defaults suit an app whose server doesn't verify purchases (TeamMeals). An app whose server verifies Play purchases and grants by account (PulseAI) must change the first two:
+
+| Setting | Default | No purchase server | Server verifies and grants by account |
+| --- | --- | --- | --- |
+| `SubscriptionManager.Configuration.acknowledge` | `true` | `true`: nothing else acknowledges, and Google Play refunds unacknowledged purchases after 3 days | **`false`**: the server acknowledges once it has the purchase; acknowledging on the device first loses that refund safety net if the sync fails |
+| `SuperwallManager.Purchases.requireAccountId` | `false` | `false`: an unstamped purchase still works | **`true`**: an unstamped purchase could be claimed by any account |
+| `AccountId` namespace (in `userId`) | — | Any fixed UUID, shared with the iOS app | **The server's** namespace (`ACCOUNT_TOKEN_NAMESPACE`), or purchases won't match the user |
 
 With Hilt, expose the services so view models can inject them:
 

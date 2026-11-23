@@ -171,7 +171,8 @@ class SuperwallManager internal constructor(
     /**
      * Shows the paywall for [placement] (iOS's `showPaywall`). Callbacks arrive on the main thread:
      * - [onPresent] once it's on screen;
-     * - [onFinish] when it closes, with whether the user bought (or restored into) access;
+     * - [onFinish] when it closes, with whether the user bought something on it or restored into access they didn't
+     *   have when it opened (see [didPurchase]);
      * - [onNotShown] when no paywall showed (no campaign matched, holdout, already subscribed, or an error), so the
      *   caller can carry on or fall back to its local paywall instead of a dead button.
      */
@@ -186,10 +187,13 @@ class SuperwallManager internal constructor(
             onNotShown(IllegalStateException("Superwall isn't configured"))
             return
         }
+        // Paywalls shown only to entitled users (e.g. packs for subscribers) close with access either way, so access
+        // alone can't mean a purchase: only access gained while this paywall was open counts.
+        val wasEntitled = subscriptions.isEntitled.value
         val handler = PaywallPresentationHandler().apply {
             onPresent { info -> onMain { onPresent(info) } }
             onDismiss { _, result ->
-                onMain { onFinish(result is PaywallResult.Purchased || subscriptions.isEntitled.value) }
+                onMain { onFinish(didPurchase(result, wasEntitled, subscriptions.isEntitled.value)) }
             }
             onSkip { reason -> onMain { onNotShown(reason) } }
             onError { error -> onMain { onNotShown(error) } }
@@ -293,5 +297,16 @@ class SuperwallManager internal constructor(
     companion object {
         /** The placement iOS's `showPaywall()` uses by default. */
         const val DEFAULT_PLACEMENT = "campaign_trigger"
+
+        /**
+         * Whether a closed paywall counts as a purchase: something was bought on it, or the user came away entitled
+         * after opening it without access (a Restore; with automatic dismissal off it closes as Declined).
+         *
+         * An entitled user who closes without buying isn't counted, even with Restore tapped. One rare miss: a cold
+         * launch that still remembers "not subscribed" when Google Play's answer lands during the paywall counts its
+         * close as a purchase.
+         */
+        internal fun didPurchase(result: PaywallResult, wasEntitled: Boolean, isEntitled: Boolean): Boolean =
+            result is PaywallResult.Purchased || (!wasEntitled && isEntitled)
     }
 }
